@@ -6,11 +6,15 @@ namespace SprocRigger
     public class SqlDataInstruction : IDataInstruction
     {
         private readonly List<Func<ISprocInstanceBase>> _spocInstances = new List<Func<ISprocInstanceBase>>();
-        private readonly SqlImplementation _databaseImplementation;
-        public SqlDataInstruction(Func<ISprocInstanceBase> sprocInstance, SqlImplementation databaseImplementation)
+        private readonly ISqlImplementation _databaseImplementation;
+        public SqlDataInstruction(Func<ISprocInstanceBase> sprocInstance, ISqlImplementation databaseImplementation):this(databaseImplementation)
+        {
+            _spocInstances.Add(sprocInstance);
+        }
+
+        public SqlDataInstruction(ISqlImplementation databaseImplementation)
         {
             _databaseImplementation = databaseImplementation;
-            _spocInstances.Add(sprocInstance);
         }
 
         public IDataInstruction Use(ISprocInstanceBase sprocInstance)
@@ -24,7 +28,7 @@ namespace SprocRigger
             _spocInstances.Add(sprocInstance);
             return this;
         }
-
+        
         public void Execute()
         {
             _databaseImplementation.OpenConnection();

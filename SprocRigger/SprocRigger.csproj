@@ -1,12 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFrameworks>net452;netstandard1.6</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Data.SqlClient" Version="4.4.0-preview1-25305-02" />
-    <PackageReference Include="UglyMapper" Version="0.2.0.2" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.4.0-preview2-25405-01" />
+    <PackageReference Include="UglyMapper" Version="0.2.0.3" />
   </ItemGroup>
 
 </Project>

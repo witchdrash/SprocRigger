@@ -30,6 +30,12 @@ namespace SprocRigger
             Value = value;
         }
 
+        public QueryParameter(string name, ParameterDirection direction, object value, Type type) : this(name, direction, type)
+        {
+            _set = true;
+            Value = value;
+        }
+
         public string Name { get; }
 
         public object Value

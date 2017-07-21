@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 
 namespace SprocRigger
 {
@@ -53,11 +54,6 @@ namespace SprocRigger
         public DbType GetDbType(Type type)
         {
             return _typeMapDictionary[type];
-        }
-
-        public DbType GetDbType(object value)
-        {
-            return _typeMapDictionary[value.GetType()];
         }
     }
 }

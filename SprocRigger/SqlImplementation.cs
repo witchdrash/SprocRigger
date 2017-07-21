@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using SprocRigger.Wrappers;
 
 namespace SprocRigger
 {
-    public class SqlImplementation
+    public class SqlImplementation : ISqlImplementation
     {
-        private readonly SqlConnection _sqlConnection;
+        private readonly ISqlConnectionWrapper _sqlConnection;
 
-        public SqlImplementation(SqlConnection sqlConnection)
+        public SqlImplementation(ISqlConnectionWrapper sqlConnection)
         {
             _sqlConnection = sqlConnection;
         }
 
-        public void Execute(ISprocInstanceBase configuration, SqlTransaction transaction)
+        public virtual void Execute(ISprocInstanceBase configuration, ISqlTransactionWrapper transaction)
         {
             var command = _sqlConnection.CreateCommand();
             command.Transaction = transaction;
@@ -48,7 +49,7 @@ namespace SprocRigger
             ProcessParameters(configuration, command);
         }
 
-        private static void ProcessParameters(ISprocInstanceBase configuration, SqlCommand command)
+        private static void ProcessParameters(ISprocInstanceBase configuration, ISqlCommandWrapper command)
         {
             foreach (SqlParameter parameter in command.Parameters)
             {
@@ -64,7 +65,7 @@ namespace SprocRigger
             configuration.Parameters.First(x => x.Name == parameter.ParameterName.Replace("@", "")).Value = parameter.Value;
         }
 
-        private static void BuildScalarResult(ISprocInstanceBase configuration, IDbCommand command)
+        private static void BuildScalarResult(ISprocInstanceBase configuration, ISqlCommandWrapper command)
         {
             var result = command.ExecuteScalar();
             var dataResults = new DataResults();
@@ -73,7 +74,7 @@ namespace SprocRigger
             configuration.AddDataResults(dataResults);
         }
 
-        private static void BuildCollectionResult(ISprocInstanceBase configuration, IDbCommand command)
+        private static void BuildCollectionResult(ISprocInstanceBase configuration, ISqlCommandWrapper command)
         {
             using (var dataReader = command.ExecuteReader())
             {
@@ -112,7 +113,7 @@ namespace SprocRigger
             _sqlConnection.Close();
         }
 
-        public SqlTransaction CreateTransaction()
+        public ISqlTransactionWrapper CreateTransaction()
         {
             return _sqlConnection.BeginTransaction(GetTransactionName());
         }

@@ -1,4 +1,6 @@
-﻿namespace SprocRigger
+﻿using System;
+
+namespace SprocRigger
 {
     public class DataResult
     {
@@ -14,6 +16,9 @@
 
         public T Value<T>()
         {
+            if (_value is DBNull && default(T) == null)
+                return default(T);
+
             return (T)_value;
         }
     }
